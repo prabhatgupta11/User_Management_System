@@ -1,21 +1,23 @@
 const express=require("express")
+const mongoose=require("mongoose")
+require("dotenv").config()
+const {connection}=require("./db");
+const { userRouter } = require("./routes/userRouter");
 const app=express();
+
 app.use(express.json())
 
 
-mongoose.connect(`mongodb+srv://prabhat:${process.env.pas}@cluster0.nob5hjt.mongodb.net/Email_scheduling?retryWrites=true&w=majority`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB: ", err);
-  });
+app.use("/api/user",userRouter)
 
 
-
-app.listen(process.env.PORT, () => {
-  console.log("Server is running at port 4500");
+app.listen(process.env.PORT,  async () => {
+  try{
+     await connection
+     console.log("connect to database")
+  }catch(err)
+  {
+    console.log(err.message)
+  }
+  console.log(`Server is running at port ${process.env.PORT}`);
 });
